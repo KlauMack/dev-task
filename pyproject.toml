@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "dev-task"
+version = "0.1.0"
+description = ""
+authors = ["Klaudijus <klaudijus.mackonis@cybercare.cc>"]
+readme = "README.md"
+packages = [{include = "src", from = "./"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+uvicorn = "^0.30.0"
+requests = "^2.32.2"
+mysql-connector-python = "^8.4.0"
+sqlalchemy = "^2.0.30"
+pyjwt = "^2.8.0"
+python-dotenv = "^1.0.1"
+mysqlclient = "^2.2.4"
+pytest = "^8.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+event_propagator = "src.event_propagator.run_propagator:run_propagator"
+event_consumer = "src.event_consumer.run_consumer:run_consumer"

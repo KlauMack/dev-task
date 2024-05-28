@@ -1,0 +1,7 @@
+*.log
+.env
+.env.local
+.vscode/
+__pycache__/
+package-lock.json
+*.DS_Store
