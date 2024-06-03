@@ -30,6 +30,10 @@ def read_events(file_path: str) -> List[dict]:
         with open(file_path, "r", encoding="utf-8") as file:
             events_data = json.load(file)
         return events_data
+    # REVIEW COMMENT:
+    # An exception here would cause unexpected behaviour when using the function, since it would just return `None` after logging.
+    # In our case it would result in a `TypeError`, since we would pass `None` to `random.choice()` in the `send_events` function.
+    # The correct behaviour here would be to either reraise the exception of raise a custom one, indicating what went wrong.
     except FileNotFoundError:
         logging.error(f"Error: The file at {file_path} was not found.")
     except Exception as e:
@@ -50,10 +54,22 @@ def send_events(base_url: str, events: List[dict]) -> None:
     Raises:
         Exception: If an error occurs during the event send operation.
     """
+    # REVIEW COMMENT:
+    # This logic has 4 nesting levels, which makes the function hard to read and test.
+    # One nesting level could be avoided by checking `if not check_status` and returning afterwards, instead of dumping everything under the `if` statement. Such as:
+    #
+    # if not check_status(base_url):
+    #   logging.warning("API is not ready yet, try again in a few seconds.")
+    #   return
+    # while events: ...
+
     if check_status(base_url):
         while events:
             random_event = random.choice(events)
             try:
+                # REVIEW COMMENT:
+                # Nitpick, but it would be safer to use something like urllib.parse.urljoin to construct the URL here.
+                # It would break if the `base_url` was defined with a `/` at the end. 
                 response = requests.post(base_url + "/event", headers=HEADERS, json=random_event)
 
                 if response.status_code == 200:
@@ -73,7 +89,10 @@ def send_events(base_url: str, events: List[dict]) -> None:
 def check_status(endpoint_url: str) -> bool:
     """Checks endpoint ready status."""
     response = requests.get(endpoint_url + "/ready", headers=HEADERS)
-    
+    # REVIEW COMMENT:
+    # Nitpick, but could be rewritten as a oneliner.
+    # `return response.status_code == 200 and response.json()["status"] == "ready"`
+
     # Check if the response indicates readiness
     if response.status_code == 200 and response.json()["status"] == "ready":
         return True

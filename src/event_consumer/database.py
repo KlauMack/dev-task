@@ -40,10 +40,15 @@ class DatabaseConnection():
             session.close()
             raise e
     
+    # REVIEW COMMENT:
+    # This method doesn't seem to return anything, but it's hinted to return a single `Event` object.
     def read_records(self) -> Event:
         session = self._Session()
         try:
             events = session.query(Event).all()
+            # REVIEW COMMENT:
+            # This print statement seems a bit too uninformative. Would be great to add some additional context.
+            # Also, seems like in other places `logging` is used, so it should be aligned as well.
             for event in events:
                 print((event.id, event.event_type, event.event_payload))
             session.close()
