@@ -5,7 +5,7 @@ load_dotenv()
 
 PORT = 8000
 
-ENDPOINT = f"http://localhost:{PORT}"
+ENDPOINT = f"localhost:{PORT}"
 
 EVENTS_FILE_PATH = f"src/event_propagator/events.json"
 
